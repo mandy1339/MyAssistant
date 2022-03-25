@@ -1,0 +1,87 @@
+﻿body {
+    font-family: Libre Franklin, Ubuntu, News_Cycle;
+    background: url("../images/smoke.jpg") center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: white;
+}
+
+.center {
+    margin: auto;
+    width: 75%;
+    /*border: 3px solid green;*/
+    /*border-style: solid;
+    border-width: 1px;
+    border-color: white;*/
+    padding: 10px;
+}
+
+.centerFill {
+    margin: auto;
+    width: stretch;
+    /*border: 3px solid green;*/
+/*    border-style: solid;
+    border-width: 1px;
+    border-color: white;*/
+    padding: 10px;
+}
+
+/*h1 {
+    color: darkorange;
+    background-color: linen;
+
+}*/
+
+#header1 {
+    padding: 40px;
+    margin-top: 15px;
+    background-color: rgba(0,0,0,0.94);
+    color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: white;
+    /* text-align: center; */
+}
+
+.WhiteOnBlack {
+    padding: 40px;
+    margin-top: 15px;
+    background-color: rgba(0,0,0,0.94);
+    color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: white;
+}
+
+h3 {
+    /*padding: 40px;*/
+    margin-top: 15px;
+    color: white;
+    /*border-style: solid;*/
+    /*border-width: 1px;
+    border-color: white;*/
+}
+
+.tableHeader {
+    background-color: rgba(0,0,0,0.94);
+    border-style: solid;
+    border-width: thin;
+    color: white;
+}
+
+.tableCell {
+    color: black;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.Hidden {
+    visibility: hidden;
+    max-height: 0;
+}
+
+.Visible {
+    visibility: visible;
+}
