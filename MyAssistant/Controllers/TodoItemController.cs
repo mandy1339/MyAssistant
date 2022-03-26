@@ -1,4 +1,5 @@
 ﻿using MyAssistant.Utils;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,7 +19,7 @@ namespace MyAssistant.Models
         /// <returns>IEnumerable Of All Items</returns>
         public static IEnumerable<TodoItem> GetTodoItems()
         {
-            DataTable RS = DBUtils.Get1RSFromSqlString(
+            DataTable RS = DBUtilsMySQL.Get1RSFromSqlString(
                 "SELECT " +
                     "PKey, " +
                     "Description, " +
@@ -28,9 +29,9 @@ namespace MyAssistant.Models
                     "IsComplete, " +
                     "Priority " +
                 "FROM " +
-                    "dbo.TodoItem " +
+                    "TodoItem " +
                 "WHERE " +
-                    "IsComplete <> 1 OR DateCompleted >= CAST(GETDATE() AS DATE) " +
+                    "IsComplete <> 1 OR DateCompleted >= CURRENT_DATE() " +
                 "ORDER BY " +
                     "IsComplete ASC, " +
                     "Priority ASC, " +
@@ -47,7 +48,7 @@ namespace MyAssistant.Models
                     CreatedDate = (DateTime)RS.Rows[i]["CreatedDate"],
                     DueDate = (DateTime?) (RS.Rows[i]["DueDate"] == DBNull.Value ? null : RS.Rows[i]["DueDate"]),
                     Category = RS.Rows[i]["Category"].ToString()[0],
-                    IsComplete = (bool)RS.Rows[i]["IsComplete"],
+                    IsComplete = Convert.ToBoolean((ulong)RS.Rows[i]["IsComplete"]),
                     Priority = (Byte)RS.Rows[i]["Priority"],
                 };
                 result.Add(newItem);
@@ -70,44 +71,61 @@ namespace MyAssistant.Models
         {
             string procSQL = "spr_AddItem";
             int IDOut = 0;
-            SqlConnection con = DBUtils.GetConnection();
-            SqlCommand cmd = new SqlCommand(procSQL, con);
+            MySqlConnection con = DBUtilsMySQL.GetConnection();
+            MySqlCommand cmd = new MySqlCommand(procSQL, con);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@Description", SqlDbType.VarChar).Value = description;
+            cmd.Parameters.AddWithValue("Description", MySqlDbType.VarChar).Value = description;
+            cmd.Parameters["Description"].MySqlDbType = MySqlDbType.VarChar;
             if (dueDate != null)
-                cmd.Parameters.AddWithValue("@DueDate", SqlDbType.Date).Value = dueDate;
-            cmd.Parameters.AddWithValue("@Category", SqlDbType.Char).Value = category.ToString();
-            cmd.Parameters.AddWithValue("@IsComplete", SqlDbType.Bit).Value = isComplete;
-            cmd.Parameters.AddWithValue("@Priority", SqlDbType.TinyInt).Value = (Byte)priority;
-            cmd.Parameters.Add("@PKey", SqlDbType.Int);
-            cmd.Parameters["@PKey"].Direction = ParameterDirection.Output;
+                cmd.Parameters.AddWithValue("DueDate", MySqlDbType.Date).Value = DBNull.Value;// dueDate;
+            else
+                cmd.Parameters.AddWithValue("DueDate", MySqlDbType.Date).Value = DBNull.Value;//null;
+            cmd.Parameters["DueDate"].MySqlDbType = MySqlDbType.Date;
+            cmd.Parameters.AddWithValue("Category", MySqlDbType.VarChar).Value = category.ToString();
+            cmd.Parameters["Category"].MySqlDbType = MySqlDbType.VarChar;
+            cmd.Parameters.AddWithValue("IsComplete", MySqlDbType.Bit).Value = isComplete == true ? 1 : 0;
+            cmd.Parameters["IsComplete"].MySqlDbType = MySqlDbType.Bit;
+            cmd.Parameters.AddWithValue("Priority", MySqlDbType.UInt16).Value = (Byte)priority;
+            cmd.Parameters.Add("PKey", MySqlDbType.Int32);     
+            cmd.Parameters["PKey"].Direction = ParameterDirection.Output;
 
-            DBUtils.ExecuteStoredProcedure(cmd);
+            DBUtilsMySQL.ExecuteStoredProcedure(cmd);
 
-            IDOut = (int)cmd.Parameters["@PKey"].Value;
+            IDOut = (int)cmd.Parameters["PKey"].Value;
             return IDOut;
         }
 
-
+        /// <summary>
+        /// DELETE ONE ITEM
+        /// </summary>
+        /// <param name="id"></param>
         public static void DeleteTodoItem(int id)
         {
             string sql = "spr_RemoveItem";
-            SqlConnection con = DBUtils.GetConnection();
-            SqlCommand cmd = new SqlCommand(sql, con);
+            MySqlConnection con = DBUtilsMySQL.GetConnection();
+            MySqlCommand cmd = new MySqlCommand(sql, con);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@ID", SqlDbType.Int).Value = id;
-            DBUtils.ExecuteStoredProcedure(cmd);
+            cmd.Parameters.AddWithValue("ID", MySqlDbType.Int32).Value = id;
+            DBUtilsMySQL.ExecuteStoredProcedure(cmd);
         }
 
 
+
+
+        /// <summary>
+        /// TOGGLE CHECKBOX
+        /// Checking box sets the DateDone value and the IsDone value
+        /// Unchecking box clears DateDone and IsDone
+        /// </summary>
+        /// <param name="id"></param>
         public static void ToggleCheckBox(int id)
         {
             string sql = "spr_ToggleTodoItem";
-            SqlConnection con = DBUtils.GetConnection();
-            SqlCommand cmd = new SqlCommand(sql, con);
+            MySqlConnection con = DBUtilsMySQL.GetConnection();
+            MySqlCommand cmd = new MySqlCommand(sql, con);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@ID", SqlDbType.Int).Value = id;
-            DBUtils.ExecuteStoredProcedure(cmd);
+            cmd.Parameters.AddWithValue("ID", SqlDbType.Int).Value = id;
+            DBUtilsMySQL.ExecuteStoredProcedure(cmd);
         }
     }
 }

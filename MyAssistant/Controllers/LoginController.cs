@@ -26,7 +26,7 @@ namespace MyAssistant.Controllers
             sha256.Clear();
 
             string sql = $"SELECT ID, UserName, Password, PhoneNumber, Email FROM [User] WHERE UserName = '{userName}' AND Password = '{hashedPassword}'";
-            DataTable RS = DBUtils.Get1RSFromSqlString(sql);
+            DataTable RS = DBUtilsMySQL.Get1RSFromSqlString(sql);
             if (RS.Rows.Count == 0)
                 return null;
             User user = new User()
