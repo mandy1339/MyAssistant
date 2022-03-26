@@ -77,9 +77,9 @@ namespace MyAssistant.Models
             cmd.Parameters.AddWithValue("Description", MySqlDbType.VarChar).Value = description;
             cmd.Parameters["Description"].MySqlDbType = MySqlDbType.VarChar;
             if (dueDate != null)
-                cmd.Parameters.AddWithValue("DueDate", MySqlDbType.Date).Value = DBNull.Value;// dueDate;
+                cmd.Parameters.AddWithValue("DueDate", MySqlDbType.Date).Value = dueDate;
             else
-                cmd.Parameters.AddWithValue("DueDate", MySqlDbType.Date).Value = DBNull.Value;//null;
+                cmd.Parameters.AddWithValue("DueDate", MySqlDbType.Date).Value = DBNull.Value;
             cmd.Parameters["DueDate"].MySqlDbType = MySqlDbType.Date;
             cmd.Parameters.AddWithValue("Category", MySqlDbType.VarChar).Value = category.ToString();
             cmd.Parameters["Category"].MySqlDbType = MySqlDbType.VarChar;
