@@ -25,7 +25,7 @@ namespace MyAssistant.Controllers
             string hashedPassword = sb.ToString();
             sha256.Clear();
 
-            string sql = $"SELECT ID, UserName, Password, PhoneNumber, Email FROM [User] WHERE UserName = '{userName}' AND Password = '{hashedPassword}'";
+            string sql = $"SELECT ID, UserName, Password, PhoneNumber, Email FROM User WHERE UserName = '{userName}' AND Password = '{hashedPassword}'";
             DataTable RS = DBUtilsMySQL.Get1RSFromSqlString(sql);
             if (RS.Rows.Count == 0)
                 return null;
