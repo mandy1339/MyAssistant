@@ -26,16 +26,18 @@
             </header>
             <asp:RequiredFieldValidator ID="DescriptionValidator" runat="server" ControlToValidate="Txb_AddItem" ErrorMessage="Invalid Description" BackColor="#FA7A7A"></asp:RequiredFieldValidator>
             <asp:RangeValidator ID="DueDateValidator" runat="server" ControlToValidate="Txb_DueDate" ErrorMessage="Invalid Date" MaximumValue="2090/12/31" MinimumValue="2020/01/01" Type="Date" BackColor="#FF7D5E"></asp:RangeValidator>
-            <button id="ButtonShowTodoForm" type="button" class="btn btn-success" onclick="toggleShowTodoForm()">Add New | +</button> 
             <br />
             <div id="AddTodoForm" class="center WhiteOnBlack Hidden"  >
                 
-                    <asp:TextBox ID="Txb_AddItem" runat="server" placeholder="Todo Item Description" Width="808px" BackColor="#E5E5E5"></asp:TextBox>
+                <label class="InputLabel">Description *</label>
+                    <asp:TextBox ID="Txb_AddItem" runat="server" placeholder="Todo Item Description" Width="482px" BackColor="#E5E5E5"></asp:TextBox>
                     <br />
+                <label class="InputLabel">Category *</label>
                     <asp:RadioButton ID="Rd_Work" runat="server" GroupName="Category" Text="Work" ValidationGroup="CategoryValidationGroup" BackColor="Plum" />
                     <asp:RadioButton ID="Rd_Personal" runat="server" GroupName="Category" Text="Personal" ValidationGroup="CategoryValidationGroup" BackColor="LightBlue"/>
                     <asp:RadioButton ID="Rd_School" runat="server" GroupName="Category" Text="School" ValidationGroup="CategoryValidationGroup" BackColor="Moccasin" />
-                    &nbsp;<br />
+                    ;<br />
+                <label class="InputLabel">Due Date</label>
                     <asp:TextBox ID="Txb_DueDate" runat="server" onclick="showDueDatePickerCalendar()" placeholder="Due Date" ToolTip="Enter Due Date If There Is One" BackColor="#E5E5E5" Width="196px"></asp:TextBox>
                 
                 <asp:Calendar ID="CalendarDueDatePicker" hidden="true" runat="server" BackColor="White" BorderColor="#999999" CellPadding="4" DayNameFormat="Shortest" Font-Names="Verdana" Font-Size="8pt" ForeColor="Black" Height="180px" OnSelectionChanged="CalendarDueDatePicker_SelectionChanged" Width="200px">
@@ -49,7 +51,7 @@
                     <WeekendDayStyle BackColor="#FFFFCC" />
                 </asp:Calendar>                
                     <br />
-&nbsp;Priority
+                <label class="InputLabel">Priority *</label>
                 <asp:DropDownList ID="DD_Priority" runat="server" Width="46px">
                     <asp:ListItem Selected="True">4</asp:ListItem>
                     <asp:ListItem>3</asp:ListItem>
@@ -59,11 +61,13 @@
                 <asp:Label ID="Lb_Message" runat="server"></asp:Label>
                 <br />
                 <br />
-                <asp:Button ID="Btn_AddItem" runat="server" Text="Add New" OnClick="Btn_AddItem_Click"/>
+                <asp:Button ID="Btn_AddItem" CssClass="AddButton btn btn-success WhiteBorderButton" runat="server" Text="Add" OnClick="Btn_AddItem_Click"/>
             </div>
         </div>
-        <div class="center">
+        <div class="center" id="TodoSectionDiv">
             <h3>Todo Items</h3>
+            
+            <button id="ButtonShowTodoForm" type="button" class="btn btn-success WhiteBorderButton" onclick="toggleShowTodoForm()">Add New | +</button> 
             <asp:Table ID="TodoTable1" runat="server" class="centerFill">
                 <asp:TableRow runat="server" class="tableHeader">
                     <asp:TableCell ID="isDoneCol" runat="server">isDone?</asp:TableCell>
@@ -73,9 +77,10 @@
                     <asp:TableCell ID="CreatedDateCol" runat="server">Created Date</asp:TableCell>
                     <asp:TableCell ID="DueDateCol" runat="server">DueDate</asp:TableCell>
                     <asp:TableCell ID="DeleteCol" runat="server">
-                        <asp:ImageButton ID="Btn_Delete" Height="30" Width="30" AlternateText ="DeleteImage" ImageUrl="Images/trash-can.png" runat="server" OnClick="DeleteButton_Click"/></asp:TableCell>
+                        <asp:ImageButton ID="Btn_Delete" Height="30" Width="30" AlternateText ="DeleteImage" ImageUrl="Images/Red-X.png" runat="server" OnClick="DeleteButton_Click"/></asp:TableCell>
                 </asp:TableRow>
             </asp:Table>
+            
         </div> 
         <div class="center">
             <asp:Calendar ID="Calendar1" runat="server" class="centerFill" BackColor="White" BorderColor="Black" Font-Names="Times New Roman" Font-Size="10pt" ForeColor="Black" Height="500px" NextPrevFormat="FullMonth" OnDayRender="Calendar1_DayRender" DayNameFormat="Shortest" TitleFormat="Month">

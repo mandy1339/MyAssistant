@@ -1,4 +1,6 @@
 Web.config
+Web.Debug.config
+Web.Release.config
 
 # Created by https://www.gitignore.io
 

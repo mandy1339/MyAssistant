@@ -118,6 +118,7 @@
     <Content Include="CSS\StyleSheet1.css" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Images\Red-X.png" />
     <Content Include="Images\smoke.jpg" />
     <Content Include="Images\trash-can.png" />
     <Content Include="Javascript\DefaultJSHandlers.js" />

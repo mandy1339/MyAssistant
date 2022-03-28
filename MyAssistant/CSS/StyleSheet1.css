@@ -59,6 +59,7 @@ h3 {
     /*padding: 40px;*/
     margin-top: 15px;
     color: white;
+    text-align: center;
     /*border-style: solid;*/
     /*border-width: 1px;
     border-color: white;*/
@@ -84,4 +85,68 @@ h3 {
 
 .Visible {
     visibility: visible;
+}
+
+h1 {
+    color: white;
+}
+
+.InputLabel {
+    width: 100px;
+    display: inline-block;
+    color: white;
+    border: none;
+    background-color: rgba(0,0,0,0.5);
+    /*border-style: solid;
+    border-width: none;
+    border-width: 1px;*/
+}
+.AddButton {
+    margin-left: 104px;
+    color: black;
+    min-width: 80px;
+}
+#ButtonShowTodoForm {
+    margin: 25px;
+}
+
+#TodoSectionDiv{
+    width: fit-content;
+}
+
+.WhiteBorderButton {
+    border: thin;
+    border-width: 1px;
+    border-color: white;
+}
+
+
+
+
+/*LOGIN*/
+.LoginButton {
+    margin-left: 104px;
+    color: black;
+}
+
+.LoginLabel {
+    width: 100px;
+    display: inline-block;
+    color: white;
+    border: none;
+    background-color: rgba(0,0,0,0.5);
+    /*border-style: solid;
+    border-width: none;
+    border-width: 1px;*/
+}
+
+.LoginDiv {
+    width: 500px;
+    padding: 40px;
+    margin-top: 15px;
+    background-color: rgba(0,0,0,0.8);
+    color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: white;
 }
