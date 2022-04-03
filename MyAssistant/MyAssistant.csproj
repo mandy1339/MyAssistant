@@ -115,42 +115,76 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CSS\StyleSheet2.css" />
     <Content Include="CSS\StyleSheet1.css" />
-    <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Images\favicon.ico" />
     <Content Include="Images\Red-X.png" />
     <Content Include="Images\smoke.jpg" />
     <Content Include="Images\trash-can.png" />
     <Content Include="Javascript\DefaultJSHandlers.js" />
-    <Content Include="Login.aspx" />
+    <Content Include="LoginWithMasterPage.aspx" />
+    <Content Include="TodoDefault.aspx" />
+    <Content Include="TodoPersonalPage.aspx" />
+    <Content Include="TodoSchoolPage.aspx" />
+    <Content Include="TodoWorkPage.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Login.aspx.cs">
-      <DependentUpon>Login.aspx</DependentUpon>
+    <Compile Include="LoginWithMasterPage.aspx.cs">
+      <DependentUpon>LoginWithMasterPage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Login.aspx.designer.cs">
-      <DependentUpon>Login.aspx</DependentUpon>
+    <Compile Include="LoginWithMasterPage.aspx.designer.cs">
+      <DependentUpon>LoginWithMasterPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Masterpages\TodoItemsMasterPage.Master.cs">
+      <DependentUpon>TodoItemsMasterPage.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Masterpages\TodoItemsMasterPage.Master.designer.cs">
+      <DependentUpon>TodoItemsMasterPage.Master</DependentUpon>
     </Compile>
     <Compile Include="Models\TodoItem.cs" />
     <Compile Include="Controllers\TodoItemController.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TodoDefault.aspx.cs">
+      <DependentUpon>TodoDefault.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TodoDefault.aspx.designer.cs">
+      <DependentUpon>TodoDefault.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TodoPersonalPage.aspx.cs">
+      <DependentUpon>TodoPersonalPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TodoPersonalPage.aspx.designer.cs">
+      <DependentUpon>TodoPersonalPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TodoSchoolPage.aspx.cs">
+      <DependentUpon>TodoSchoolPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TodoSchoolPage.aspx.designer.cs">
+      <DependentUpon>TodoSchoolPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TodoWorkPage.aspx.cs">
+      <DependentUpon>TodoWorkPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TodoWorkPage.aspx.designer.cs">
+      <DependentUpon>TodoWorkPage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Utils\DBUtilsMySQL.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Masterpages\TodoItemsMasterPage.Master" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\ArmandoToledo - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\ArmandoToledo - Web Deploy1.pubxml" />
