@@ -14,10 +14,10 @@ namespace MyAssistant
     {
         protected void Page_PreInit(object sender, EventArgs e)
         {
-            #if !DEBUG
+            //#if !DEBUG
             if (Session["isLoggedIn"] == null)
                 Response.Redirect("Login.aspx");
-            #endif
+            //#endif
 
             if (Session["todoDictionary"] != null)
                 LoadTodosFromSessionCache();
@@ -169,7 +169,7 @@ namespace MyAssistant
                 TableCell cell5 = new TableCell() { Text = i.CreatedDate.Date.ToShortDateString(), ID = $"CreatedDateCol{i.PKey}", CssClass = "tableCell" };
                 TableCell cell6 = new TableCell() { Text = i.DueDate?.Date.ToShortDateString(), ID = $"DueDateCol{i.PKey}", CssClass = "tableCell" };
                 TableCell cell7 = new TableCell() { ID = $"deleteCol{i.PKey}", CssClass = "tableCell" };
-                ImageButton ib = new ImageButton() { Width = 30, Height = 30, AlternateText = "DeleteButton", ImageUrl = "Images/trash-can.png", ID = $"DeleteButton_{i.PKey}", CausesValidation = false, };
+                ImageButton ib = new ImageButton() { Width = 20, Height = 20, AlternateText = "DeleteButton", ImageUrl = "Images/Red-X.png", ID = $"DeleteButton_{i.PKey}", CausesValidation = false, ImageAlign= ImageAlign.Middle };
                 ib.Click += DeleteButton_Click;
                 cell7.Controls.Add(ib);
                 TableRow tr = new TableRow();

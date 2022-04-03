@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -9,12 +10,14 @@ using System.Threading.Tasks;
 
 namespace MyAssistant.Utils
 {
-    public class DBUtils
+    public class DBUtilsMySQL
     {
-        public static SqlConnection GetConnection()
+        public static MySqlConnection GetConnection()
         {
             string connStr = ConfigurationManager.ConnectionStrings["MyAssistantDB"].ConnectionString;
-            SqlConnection conn = new SqlConnection(connStr);
+            //SqlConnection conn = new SqlConnection(connStr);
+            //return conn;
+            MySqlConnection conn = new MySqlConnection(connStr);
             return conn;
         }
 
@@ -22,11 +25,14 @@ namespace MyAssistant.Utils
 
         public static DataTable Get1RSFromSqlString(string sqlString)
         {
-            SqlConnection conn = GetConnection();
+            MySqlConnection conn = GetConnection();
             DataTable rs = new DataTable();
             conn.Open();
-            SqlDataAdapter da = new SqlDataAdapter(sqlString, conn);
-            da.Fill(rs);
+            //SqlDataAdapter da = new SqlDataAdapter(sqlString, conn);
+            MySqlCommand cmd = new MySqlCommand(sqlString, conn);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            //da.Fill(rs);
+            rs.Load(reader);
             conn.Close();
             return rs;
         }
@@ -34,12 +40,11 @@ namespace MyAssistant.Utils
 
 
 
-        public static bool DoesFieldContainData(string fieldName, string tableName, string schemaName)
+        public static bool DoesFieldContainData(string fieldName, string tableName, string schemaName = null)
         {
-            SqlConnection conn = GetConnection();
+            MySqlConnection conn = GetConnection();
             DataTable rs = new DataTable();
-            string sql = $"SELECT TOP 1 \"{fieldName}\" AS data FROM \"{schemaName}\".\"{tableName}\" WHERE \"{fieldName}\" IS NOT NULL";
-
+            string sql = $"SELECT TOP 1 \"{fieldName}\" AS data FROM \"{tableName}\" WHERE \"{fieldName}\" IS NOT NULL";
             rs = Get1RSFromSqlString(sql);
             int rsCount = rs.Rows.Count;
             return (rsCount > 0 ? true : false);
@@ -49,7 +54,7 @@ namespace MyAssistant.Utils
 
         public static void TestConnectionString(string connString)
         {
-            SqlConnection conn = new SqlConnection(connString);
+            MySqlConnection conn = new MySqlConnection(connString);
             conn.Open();
             conn.Close();
         }
@@ -57,18 +62,18 @@ namespace MyAssistant.Utils
 
 
 
-        public static void ExecuteStoredProcedure(SqlCommand cmd)
+        public static void ExecuteStoredProcedure(MySqlCommand cmd)
         {
-            SqlConnection con = DBUtils.GetConnection();
+            MySqlConnection con = DBUtilsMySQL.GetConnection();
             cmd.CommandType = CommandType.StoredProcedure;
-            
+
             con.Open();
             cmd.Connection = con;
             cmd.ExecuteNonQuery();
             con.Close();
         }
 
-        
+
     }
 }
 
