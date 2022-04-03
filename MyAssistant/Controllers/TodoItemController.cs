@@ -17,7 +17,7 @@ namespace MyAssistant.Models
         /// GET ALL ITEMS
         /// </summary>
         /// <returns>IEnumerable Of All Items</returns>
-        public static IEnumerable<TodoItem> GetTodoItems()
+        public static IEnumerable<TodoItem> GetTodoItems(int userID)
         {
             DataTable RS = DBUtilsMySQL.Get1RSFromSqlString(
                 "SELECT " +
@@ -31,7 +31,8 @@ namespace MyAssistant.Models
                 "FROM " +
                     "TodoItem " +
                 "WHERE " +
-                    "IsComplete <> 1 OR DateCompleted >= CURRENT_DATE() " +
+                    "(IsComplete <> 1 OR DateCompleted >= CURRENT_DATE() ) " +
+                    $"AND `UserID` = {userID.ToString()} " +
                 "ORDER BY " +
                     "IsComplete ASC, " +
                     "Priority ASC, " +
@@ -63,7 +64,7 @@ namespace MyAssistant.Models
         /// GET ONLY PERSONAL ITEMS
         /// </summary>
         /// <returns>IEnumerable Of All Items</returns>
-        public static IEnumerable<TodoItem> GetPersonalTodoItems()
+        public static IEnumerable<TodoItem> GetPersonalTodoItems(int userID)
         {
             DataTable RS = DBUtilsMySQL.Get1RSFromSqlString(
                 "SELECT " +
@@ -78,6 +79,7 @@ namespace MyAssistant.Models
                     "TodoItem " +
                 "WHERE " +
                     "(IsComplete <> 1 OR DateCompleted >= CURRENT_DATE()) AND Category = 'P' " +
+                     $"AND `UserID` = {userID.ToString()} " +
                 "ORDER BY " +
                     "IsComplete ASC, " +
                     "Priority ASC, " +
@@ -111,7 +113,7 @@ namespace MyAssistant.Models
         /// GET ONLY SCHOOL ITEMS
         /// </summary>
         /// <returns>IEnumerable Of All Items</returns>
-        public static IEnumerable<TodoItem> GetSchoolTodoItems()
+        public static IEnumerable<TodoItem> GetSchoolTodoItems(int userID)
         {
             DataTable RS = DBUtilsMySQL.Get1RSFromSqlString(
                 "SELECT " +
@@ -126,6 +128,7 @@ namespace MyAssistant.Models
                     "TodoItem " +
                 "WHERE " +
                     "(IsComplete <> 1 OR DateCompleted >= CURRENT_DATE()) AND Category = 'S' " +
+                     $"AND `UserID` = {userID.ToString()} " +
                 "ORDER BY " +
                     "IsComplete ASC, " +
                     "Priority ASC, " +
@@ -158,7 +161,7 @@ namespace MyAssistant.Models
         /// GET ONLY WORK ITEMS
         /// </summary>
         /// <returns>IEnumerable Of All Items</returns>
-        public static IEnumerable<TodoItem> GetWorkTodoItems()
+        public static IEnumerable<TodoItem> GetWorkTodoItems(int userID)
         {
             DataTable RS = DBUtilsMySQL.Get1RSFromSqlString(
                 "SELECT " +
@@ -173,6 +176,7 @@ namespace MyAssistant.Models
                     "TodoItem " +
                 "WHERE " +
                     "(IsComplete <> 1 OR DateCompleted >= CURRENT_DATE()) AND Category = 'W' " +
+                     $"AND `UserID` = {userID.ToString()} " +
                 "ORDER BY " +
                     "IsComplete ASC, " +
                     "Priority ASC, " +
@@ -209,8 +213,10 @@ namespace MyAssistant.Models
         /// <param name="dueDate"></param>
         /// <param name="category"></param>
         /// <param name="isComplete"></param>
+        /// <param name="userID -> Pass Null If Creating Item For Group"></param>
+        /// <param name="groupID -> Pass Null If Creating Item For User"></param>
         /// <returns>ID Of Newly Inserted Item</returns>
-        public static int AddTodoItem(string description, DateTime? dueDate, char? category, bool isComplete, int priority)
+        public static int AddTodoItem(string description, DateTime? dueDate, char? category, bool isComplete, int priority, int? userID, int? groupID)
         {
             string procSQL = "spr_AddItem";
             int IDOut = 0;
@@ -231,6 +237,14 @@ namespace MyAssistant.Models
             cmd.Parameters.AddWithValue("Priority", MySqlDbType.UInt16).Value = (Byte)priority;
             cmd.Parameters.Add("PKey", MySqlDbType.Int32);     
             cmd.Parameters["PKey"].Direction = ParameterDirection.Output;
+            if (userID.HasValue)
+                cmd.Parameters.AddWithValue("UserID", MySqlDbType.Int32).Value = userID.HasValue;
+            else
+                cmd.Parameters.AddWithValue("UserID", MySqlDbType.Int32).Value = DBNull.Value;
+            if (groupID.HasValue)
+                cmd.Parameters.AddWithValue("GroupID", MySqlDbType.Int32).Value = groupID.HasValue;
+            else
+                cmd.Parameters.AddWithValue("GroupID", MySqlDbType.Int32).Value = DBNull.Value;
 
             DBUtilsMySQL.ExecuteStoredProcedure(cmd);
 
