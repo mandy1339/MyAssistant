@@ -2,49 +2,61 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace MyAssistant
 {
-    public partial class Default : System.Web.UI.Page
+    public partial class TodoDefault : System.Web.UI.Page
     {
         protected void Page_PreInit(object sender, EventArgs e)
         {
             //#if !DEBUG
             if (Session["isLoggedIn"] == null)
-                Response.Redirect("Login.aspx");
+                Response.Redirect("LoginWithMasterPage.aspx");
             //#endif
 
-            if (Session["todoDictionary"] != null)
-                LoadTodosFromSessionCache();
-            else
+            // Walk up the master page chain and tickle the getter on each one
+            MasterPage master = this.Master;
+            while (master != null) master = master.Master;
+
+            if (!IsPostBack)
+            {
                 LoadTodosFromDB();
+            }
+            else
+            {
+                if (Session["todoDictionary"] != null)
+                    LoadTodosFromSessionCache();
+                else
+                    LoadTodosFromDB();
+            }
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {
-                
-            }
-            Lb_Message.Text = "";
-            if (Session["user"] != null)
-                Lbl_UserName.Text = $"Logged In As: {(Session["user"] as User).UserName}";
+            //if (!IsPostBack)
+            //{
+
+            //}
+            //Lb_Message.Text = "";
+            //if (Session["user"] != null)
+            //    Lbl_UserName.Text = $"Logged In As: {(Session["user"] as User).UserName}";
         }
 
         protected void Btn_AddItem_Click(object sender, EventArgs e)
         {
             // Validate that category was selected
             bool catWasSelected = false;
-            foreach (CheckBox b in this.form1.Controls.OfType<CheckBox>().ToList()
-                .Where(c => c.ValidationGroup == "CategoryValidationGroup"))
+            foreach (RadioButton b in this.Form.Controls.OfType<ContentPlaceHolder>()
+                                        .Where(x => x.ID.Equals("ContentPlaceHolder1"))
+                                        .First().Controls.OfType<RadioButton>().ToList()
+                                        .Where(c => c.ValidationGroup == "CategoryValidationGroup"))
             {
                 if (b.Checked)
                     catWasSelected = true;
             }
+            this.Form.Controls.OfType<ContentPlaceHolder>().Where(x => x.ID.Equals("ContentPlaceHolder1")).First().Controls.OfType<RadioButton>().ToList();
             if (catWasSelected != true)
             {
                 Lb_Message.Text = "You must select a category";
@@ -52,11 +64,14 @@ namespace MyAssistant
             }
 
             // Grab the category
-            char cat = this.form1.Controls.OfType<RadioButton>()
-                .ToList().Where(c => c.GroupName == "Category" && c.Checked == true)
-                .First()
-                .Text[0];
-            
+            char cat = this.Form.Controls.OfType<ContentPlaceHolder>()
+                                        .Where(x => x.ID.Equals("ContentPlaceHolder1"))
+                                        .First().Controls.OfType<RadioButton>().ToList()
+                                        .Where(c => c.ValidationGroup == "CategoryValidationGroup")
+                                        .ToList().Where(c => c.GroupName == "Category" && c.Checked == true)
+                                        .First()
+                                        .Text[0];
+
             // Grab the due date if set
             DateTime? dueDate = null;
             if (Txb_DueDate.Text.Length > 1)
@@ -130,7 +145,8 @@ namespace MyAssistant
 
         protected void SetupHeaders()
         {
-            TodoTable1.Controls.Clear();
+            if (TodoTable1.Controls != null)
+                TodoTable1.Controls.Clear();
             TableRow headerRow = new TableRow();
             TableCell col1 = new TableCell() { Text = "Done", ID = "isDoneCol", CssClass = "tableHeader" };
             TableCell col2 = new TableCell() { Text = "Description", ID = "DescriptionCol", CssClass = "tableHeader" };
@@ -169,7 +185,7 @@ namespace MyAssistant
                 TableCell cell5 = new TableCell() { Text = i.CreatedDate.Date.ToShortDateString(), ID = $"CreatedDateCol{i.PKey}", CssClass = "tableCell" };
                 TableCell cell6 = new TableCell() { Text = i.DueDate?.Date.ToShortDateString(), ID = $"DueDateCol{i.PKey}", CssClass = "tableCell" };
                 TableCell cell7 = new TableCell() { ID = $"deleteCol{i.PKey}", CssClass = "tableCell" };
-                ImageButton ib = new ImageButton() { Width = 20, Height = 20, AlternateText = "DeleteButton", ImageUrl = "Images/Red-X.png", ID = $"DeleteButton_{i.PKey}", CausesValidation = false, ImageAlign= ImageAlign.Middle };
+                ImageButton ib = new ImageButton() { Width = 20, Height = 20, AlternateText = "DeleteButton", ImageUrl = "Images/Red-X.png", ID = $"DeleteButton_{i.PKey}", CausesValidation = false, ImageAlign = ImageAlign.Middle };
                 ib.Click += DeleteButton_Click;
                 cell7.Controls.Add(ib);
                 TableRow tr = new TableRow();
@@ -201,7 +217,7 @@ namespace MyAssistant
                 {
                     e.Cell.Controls.Add(new Label { Text = $"{item.Description}", BorderStyle = BorderStyle.Groove });
                 }
-            }    
+            }
         }
 
         protected void CalendarDueDatePicker_SelectionChanged(object sender, EventArgs e)

@@ -60,6 +60,149 @@ namespace MyAssistant.Models
 
 
         /// <summary>
+        /// GET ONLY PERSONAL ITEMS
+        /// </summary>
+        /// <returns>IEnumerable Of All Items</returns>
+        public static IEnumerable<TodoItem> GetPersonalTodoItems()
+        {
+            DataTable RS = DBUtilsMySQL.Get1RSFromSqlString(
+                "SELECT " +
+                    "PKey, " +
+                    "Description, " +
+                    "CreatedDate, " +
+                    "DueDate, " +
+                    "Category, " +
+                    "IsComplete, " +
+                    "Priority " +
+                "FROM " +
+                    "TodoItem " +
+                "WHERE " +
+                    "(IsComplete <> 1 OR DateCompleted >= CURRENT_DATE()) AND Category = 'P' " +
+                "ORDER BY " +
+                    "IsComplete ASC, " +
+                    "Priority ASC, " +
+                    "PKey DESC ");
+
+            List<TodoItem> result = new List<TodoItem>();
+            for (int i = 0; i < RS.Rows.Count; i++)
+            {
+                int rowPKey = (int)RS.Rows[i]["PKey"];
+                TodoItem newItem = new TodoItem()
+                {
+                    PKey = rowPKey,
+                    Description = RS.Rows[i]["Description"].ToString(),
+                    CreatedDate = (DateTime)RS.Rows[i]["CreatedDate"],
+                    DueDate = (DateTime?)(RS.Rows[i]["DueDate"] == DBNull.Value ? null : RS.Rows[i]["DueDate"]),
+                    Category = RS.Rows[i]["Category"].ToString()[0],
+                    IsComplete = Convert.ToBoolean((ulong)RS.Rows[i]["IsComplete"]),
+                    Priority = (Byte)RS.Rows[i]["Priority"],
+                };
+                result.Add(newItem);
+            }
+            return result as IEnumerable<TodoItem>;
+        }
+
+
+
+
+
+
+        /// <summary>
+        /// GET ONLY SCHOOL ITEMS
+        /// </summary>
+        /// <returns>IEnumerable Of All Items</returns>
+        public static IEnumerable<TodoItem> GetSchoolTodoItems()
+        {
+            DataTable RS = DBUtilsMySQL.Get1RSFromSqlString(
+                "SELECT " +
+                    "PKey, " +
+                    "Description, " +
+                    "CreatedDate, " +
+                    "DueDate, " +
+                    "Category, " +
+                    "IsComplete, " +
+                    "Priority " +
+                "FROM " +
+                    "TodoItem " +
+                "WHERE " +
+                    "(IsComplete <> 1 OR DateCompleted >= CURRENT_DATE()) AND Category = 'S' " +
+                "ORDER BY " +
+                    "IsComplete ASC, " +
+                    "Priority ASC, " +
+                    "PKey DESC ");
+
+            List<TodoItem> result = new List<TodoItem>();
+            for (int i = 0; i < RS.Rows.Count; i++)
+            {
+                int rowPKey = (int)RS.Rows[i]["PKey"];
+                TodoItem newItem = new TodoItem()
+                {
+                    PKey = rowPKey,
+                    Description = RS.Rows[i]["Description"].ToString(),
+                    CreatedDate = (DateTime)RS.Rows[i]["CreatedDate"],
+                    DueDate = (DateTime?)(RS.Rows[i]["DueDate"] == DBNull.Value ? null : RS.Rows[i]["DueDate"]),
+                    Category = RS.Rows[i]["Category"].ToString()[0],
+                    IsComplete = Convert.ToBoolean((ulong)RS.Rows[i]["IsComplete"]),
+                    Priority = (Byte)RS.Rows[i]["Priority"],
+                };
+                result.Add(newItem);
+            }
+            return result as IEnumerable<TodoItem>;
+        }
+
+
+
+
+
+        /// <summary>
+        /// GET ONLY WORK ITEMS
+        /// </summary>
+        /// <returns>IEnumerable Of All Items</returns>
+        public static IEnumerable<TodoItem> GetWorkTodoItems()
+        {
+            DataTable RS = DBUtilsMySQL.Get1RSFromSqlString(
+                "SELECT " +
+                    "PKey, " +
+                    "Description, " +
+                    "CreatedDate, " +
+                    "DueDate, " +
+                    "Category, " +
+                    "IsComplete, " +
+                    "Priority " +
+                "FROM " +
+                    "TodoItem " +
+                "WHERE " +
+                    "(IsComplete <> 1 OR DateCompleted >= CURRENT_DATE()) AND Category = 'W' " +
+                "ORDER BY " +
+                    "IsComplete ASC, " +
+                    "Priority ASC, " +
+                    "PKey DESC ");
+
+            List<TodoItem> result = new List<TodoItem>();
+            for (int i = 0; i < RS.Rows.Count; i++)
+            {
+                int rowPKey = (int)RS.Rows[i]["PKey"];
+                TodoItem newItem = new TodoItem()
+                {
+                    PKey = rowPKey,
+                    Description = RS.Rows[i]["Description"].ToString(),
+                    CreatedDate = (DateTime)RS.Rows[i]["CreatedDate"],
+                    DueDate = (DateTime?)(RS.Rows[i]["DueDate"] == DBNull.Value ? null : RS.Rows[i]["DueDate"]),
+                    Category = RS.Rows[i]["Category"].ToString()[0],
+                    IsComplete = Convert.ToBoolean((ulong)RS.Rows[i]["IsComplete"]),
+                    Priority = (Byte)RS.Rows[i]["Priority"],
+                };
+                result.Add(newItem);
+            }
+            return result as IEnumerable<TodoItem>;
+        }
+
+
+
+
+
+
+        /// <summary>
         /// ADD NEW ITEM
         /// </summary>
         /// <param name="description"></param>

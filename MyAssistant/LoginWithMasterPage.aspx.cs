@@ -1,21 +1,21 @@
-﻿using System;
+﻿using MyAssistant.Controllers;
+using MyAssistant.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using MyAssistant.Controllers;
-using MyAssistant.Models;
 
 namespace MyAssistant
 {
-    public partial class Login : System.Web.UI.Page
+    public partial class LoginWithMasterPage : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["isLoggedIn"] != null)
             {
-                Response.Redirect("Default.aspx");
+                Response.Redirect("TodoDefault.aspx");
             }
         }
 
@@ -29,7 +29,7 @@ namespace MyAssistant
             }
             Session["isLoggedIn"] = true;
             Session["user"] = u;
-            Response.Redirect("Default.aspx");
+            Response.Redirect("TodoDefault.aspx");
         }
     }
 }
