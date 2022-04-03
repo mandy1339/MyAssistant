@@ -15,7 +15,7 @@ namespace MyAssistant
         {
             if (Session["isLoggedIn"] != null)
             {
-                Response.Redirect("TodoDefault.aspx");
+                Response.Redirect("TodoDefault.aspx", false);
             }
         }
 
@@ -29,7 +29,7 @@ namespace MyAssistant
             }
             Session["isLoggedIn"] = true;
             Session["user"] = u;
-            Response.Redirect("TodoDefault.aspx");
+            Response.Redirect("TodoDefault.aspx", false);
         }
     }
 }

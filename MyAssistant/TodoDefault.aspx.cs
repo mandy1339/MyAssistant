@@ -83,7 +83,7 @@ namespace MyAssistant
             // Grab the priority
             int priority = Int32.Parse(DD_Priority.SelectedValue.ToString());
 
-            TodoItems.AddTodoItem(description, dueDate, cat, false, priority);
+            TodoItems.AddTodoItem(description, dueDate, cat, false, priority, ((User)Session["user"]).ID, null);
             LoadTodosFromDB();
 
             Txb_AddItem.Text = "";
@@ -124,7 +124,7 @@ namespace MyAssistant
         {
             SetupHeaders();
             IEnumerable<TodoItem> todos = new List<TodoItem>();
-            todos = TodoItems.GetTodoItems();
+            todos = TodoItems.GetTodoItems((Session["user"] as User).ID);
             Dictionary<int, TodoItem> todoDictionary = new Dictionary<int, TodoItem>();
             foreach (TodoItem item in todos)
                 todoDictionary.Add(item.PKey, item);
