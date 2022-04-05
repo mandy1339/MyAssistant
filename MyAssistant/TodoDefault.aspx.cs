@@ -74,8 +74,11 @@ namespace MyAssistant
 
             // Grab the due date if set
             DateTime? dueDate = null;
-            if (Txb_DueDate.Text.Length > 1)
-                dueDate = DateTime.Parse(Txb_DueDate.Text);
+            if (HiddenField_DueDate.Value.Length > 1)
+                dueDate = DateTime.Parse(HiddenField_DueDate.Value);
+
+            //if (Txb_DueDate.Text.Length > 1)
+            //    dueDate = DateTime.Parse(Txb_DueDate.Text);
 
             // Grab the text
             string description = Txb_AddItem.Text;
@@ -83,11 +86,11 @@ namespace MyAssistant
             // Grab the priority
             int priority = Int32.Parse(DD_Priority.SelectedValue.ToString());
 
-            TodoItems.AddTodoItem(description, dueDate, cat, false, priority, ((User)Session["user"]).ID, null);
+            TodoItemController.AddTodoItem(description, dueDate, cat, false, priority, ((User)Session["user"]).ID, null);
             LoadTodosFromDB();
 
             Txb_AddItem.Text = "";
-            Txb_DueDate.Text = "";
+            //Txb_DueDate.Text = "";
         }
 
 
@@ -101,7 +104,7 @@ namespace MyAssistant
             int startIndex = ib.ID.IndexOf('_') + 1;
             string idStr = ib.ID.Substring(startIndex);
             int id = int.Parse(idStr);
-            TodoItems.DeleteTodoItem(id);
+            TodoItemController.DeleteTodoItem(id);
             LoadTodosFromDB();
         }
 
@@ -115,7 +118,7 @@ namespace MyAssistant
             int startIndex = ib.ID.IndexOf('_') + 1;
             string idStr = ib.ID.Substring(startIndex);
             int id = int.Parse(idStr);
-            TodoItems.ToggleCheckBox(id);
+            TodoItemController.ToggleCheckBox(id);
             LoadTodosFromDB();
         }
 
@@ -124,7 +127,7 @@ namespace MyAssistant
         {
             SetupHeaders();
             IEnumerable<TodoItem> todos = new List<TodoItem>();
-            todos = TodoItems.GetTodoItems((Session["user"] as User).ID);
+            todos = TodoItemController.GetTodoItems((Session["user"] as User).ID);
             Dictionary<int, TodoItem> todoDictionary = new Dictionary<int, TodoItem>();
             foreach (TodoItem item in todos)
                 todoDictionary.Add(item.PKey, item);
@@ -154,7 +157,8 @@ namespace MyAssistant
             TableCell col4 = new TableCell() { Text = "Category", ID = "CategoryCol", CssClass = "tableHeader" };
             TableCell col5 = new TableCell() { Text = "Created Date", ID = "CreatedDateCol", CssClass = "tableHeader" };
             TableCell col6 = new TableCell() { Text = "Due Date", ID = "DueDateCol", CssClass = "tableHeader" };
-            TableCell col7 = new TableCell() { Text = "Delete", ID = "DeleteCol", CssClass = "tableHeader" };
+            TableCell col7 = new TableCell() { Text = "Return", ID = "ReturnCol", CssClass = "tableHeader" };
+            TableCell col8 = new TableCell() { Text = "Delete", ID = "DeleteCol", CssClass = "tableHeader" };
             headerRow.Cells.Add(col1);
             headerRow.Cells.Add(col2);
             headerRow.Cells.Add(col3);
@@ -162,6 +166,7 @@ namespace MyAssistant
             headerRow.Cells.Add(col5);
             headerRow.Cells.Add(col6);
             headerRow.Cells.Add(col7);
+            headerRow.Cells.Add(col8);
             TodoTable1.Rows.Add(headerRow);
         }
 
@@ -184,10 +189,17 @@ namespace MyAssistant
                 TableCell cell4 = new TableCell() { Text = i.Category.ToString(), ID = $"CategoryCol{i.PKey}", CssClass = "tableCell" };
                 TableCell cell5 = new TableCell() { Text = i.CreatedDate.Date.ToShortDateString(), ID = $"CreatedDateCol{i.PKey}", CssClass = "tableCell" };
                 TableCell cell6 = new TableCell() { Text = i.DueDate?.Date.ToShortDateString(), ID = $"DueDateCol{i.PKey}", CssClass = "tableCell" };
-                TableCell cell7 = new TableCell() { ID = $"deleteCol{i.PKey}", CssClass = "tableCell" };
+                TableCell cell7 = new TableCell() { ID = $"ReturnCol{i.PKey}", };
+                if (i.GroupID.HasValue)
+                {
+                    Button returnButton = new Button() { ID = $"ReturnBut_{i.PKey}", CausesValidation = false, CssClass = "w3-w3-button w3-WhiteBorderButton w3-w3-hide-small", Text = "Return to Group" };
+                    returnButton.Click += ReturnToGroupButton_Click;
+                    cell7.Controls.Add(returnButton);
+                }
+                TableCell cell8 = new TableCell() { ID = $"deleteCol{i.PKey}", CssClass = "tableCell" };
                 ImageButton ib = new ImageButton() { Width = 20, Height = 20, AlternateText = "DeleteButton", ImageUrl = "Images/Red-X.png", ID = $"DeleteButton_{i.PKey}", CausesValidation = false, ImageAlign = ImageAlign.Middle };
                 ib.Click += DeleteButton_Click;
-                cell7.Controls.Add(ib);
+                cell8.Controls.Add(ib);
                 TableRow tr = new TableRow();
                 tr.Cells.Add(cell1);
                 tr.Cells.Add(cell2);
@@ -196,6 +208,7 @@ namespace MyAssistant
                 tr.Cells.Add(cell5);
                 tr.Cells.Add(cell6);
                 tr.Cells.Add(cell7);
+                tr.Cells.Add(cell8);
                 if (i.Category == 'P')
                     tr.BackColor = System.Drawing.Color.LightBlue;
                 if (i.Category == 'W')
@@ -207,6 +220,17 @@ namespace MyAssistant
         }
 
 
+        protected void ReturnToGroupButton_Click(object sender, EventArgs e)
+        {
+            // get the id of the item to return to group
+            Button b = (Button)sender;
+            int startIndex = b.ID.IndexOf("_");
+            int id = Int32.Parse(b.ID.Substring(startIndex + 1));
+            // return to group by calling db proc (removes the userid from the todo item)
+            TodoItemController.RemoveOwnerShipOfTodoItem(id);
+            // reload the todos to see changes
+            LoadTodosFromDB();
+        }
 
 
         protected void Calendar1_DayRender(object sender, DayRenderEventArgs e)
@@ -222,7 +246,7 @@ namespace MyAssistant
 
         protected void CalendarDueDatePicker_SelectionChanged(object sender, EventArgs e)
         {
-            Txb_DueDate.Text = CalendarDueDatePicker.SelectedDate.ToShortDateString();
+            //Txb_DueDate.Text = CalendarDueDatePicker.SelectedDate.ToShortDateString();
         }
     }
 }

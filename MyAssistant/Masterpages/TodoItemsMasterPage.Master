@@ -31,8 +31,9 @@
               <div class="w3-bar-block">
                 <a href="../TodoDefault.aspx" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-home fa-fw w3-margin-right"></i>HOME</a> 
                 <a href="../TodoPersonalPage.aspx" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-user-circle-o fa-fw w3-margin-right"></i>PERSONAL</a> 
-                <a href="../TodoWorkPage.aspx" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw w3-margin-right"></i>WORK</a> 
+                <a href="../TodoWorkPage.aspx" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-truck fa-fw w3-margin-right"></i>WORK</a> 
                 <a href="../TodoSchoolPage.aspx" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-pencil fa-fw w3-margin-right"></i>SCHOOL</a>
+                <a href="../TodoGroupPage.aspx" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw w3-margin-right"></i>GROUP</a>
               </div>
             </nav>
         </asp:Panel>

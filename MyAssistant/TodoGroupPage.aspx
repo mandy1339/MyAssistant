@@ -1,13 +1,8 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Masterpages/TodoItemsMasterPage.Master" AutoEventWireup="true" CodeBehind="TodoPersonalPage.aspx.cs" Inherits="MyAssistant.TodoPersonalPage" %>
-<%--head--%>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Masterpages/TodoItemsMasterPage.Master" AutoEventWireup="true" CodeBehind="TodoGroupPage.aspx.cs" Inherits="MyAssistant.TodoGroupPage" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script src="Javascript/DefaultJSHandlers.js" type="text/javascript"></script>
     <link href="CSS/StyleSheet2.css" type="text/css" rel="stylesheet" />
 </asp:Content>
-
-
-
-<%--content--%>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div>        
         <header id="header1">         
@@ -47,24 +42,36 @@
                 <asp:ListItem>2</asp:ListItem>
                 <asp:ListItem>1</asp:ListItem>
             </asp:DropDownList>
-            <asp:Label ID="Lb_Message" runat="server"></asp:Label>
+            <asp:Label ID="Label1" runat="server"></asp:Label>
+            <br />
+            <label class="InputLabel">Group *</label>
+            <asp:DropDownList ID="DropDownListGroup" runat="server" Width="150px">
+                <%--add ListItem's programatically--%>
+                <%--<asp:ListItem Selected="True">4</asp:ListItem>
+                <asp:ListItem>3</asp:ListItem>
+                <asp:ListItem>2</asp:ListItem>
+                <asp:ListItem>1</asp:ListItem>--%>
+            </asp:DropDownList>
             <br />
             <br />
             <asp:Button ID="Btn_AddItem" CssClass="AddButton w3-button w3-white w3-hide-small" runat="server" Text="Add" OnClick="Btn_AddItem_Click"/>
         </div>
     </div>
     <div class="center" id="TodoSectionDiv">
-        <h3>Todo Items - Personal</h3>
+        <h3>Todo Items</h3>
             
         <button id="ButtonShowTodoForm" type="button" class="w3-button w3-black w3-hide-small" onclick="toggleShowTodoForm()">Add New | +</button> 
+        <asp:Label ID="Lb_Message" runat="server" class="RedBold"></asp:Label>
         <asp:Table ID="TodoTable1" runat="server" class="centerFill">
             <asp:TableRow runat="server" class="tableHeader">
-                <asp:TableCell ID="isDoneCol" runat="server">isDone?</asp:TableCell>
                 <asp:TableCell ID="descCol" runat="server">Description</asp:TableCell>
                 <asp:TableCell ID="priorityCol" runat="server">Priority</asp:TableCell>
                 <asp:TableCell ID="CategoryCol" runat="server">Category</asp:TableCell>
                 <asp:TableCell ID="CreatedDateCol" runat="server">Created Date</asp:TableCell>
                 <asp:TableCell ID="DueDateCol" runat="server">DueDate</asp:TableCell>
+                <asp:TableCell ID="TakeItemCol" runat="server">
+                    <asp:Button ID="Button1" runat="server" CssClass="w3-w3-button w3-WhiteBorderButton w3-w3-hide-small" Text="Click To Take This Item" OnClick="TakeThisItem_Click" />
+                </asp:TableCell>
                 <asp:TableCell ID="DeleteCol" runat="server">
                     <asp:ImageButton ID="Btn_Delete" Height="30" Width="30" AlternateText ="DeleteImage" ImageUrl="Images/Red-X.png" runat="server" OnClick="DeleteButton_Click"/></asp:TableCell>
             </asp:TableRow>

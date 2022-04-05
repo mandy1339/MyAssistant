@@ -1,4 +1,5 @@
-﻿using MyAssistant.Models;
+﻿using MyAssistant.Controllers;
+using MyAssistant.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Web.UI.WebControls;
 
 namespace MyAssistant
 {
-    public partial class TodoPersonalPage : System.Web.UI.Page
+    public partial class TodoGroupPage : System.Web.UI.Page
     {
         protected void Page_PreInit(object sender, EventArgs e)
         {
@@ -20,6 +21,7 @@ namespace MyAssistant
             // Walk up the master page chain and tickle the getter on each one
             MasterPage master = this.Master;
             while (master != null) master = master.Master;
+
             if (!IsPostBack)
             {
                 LoadTodosFromDB();
@@ -31,18 +33,33 @@ namespace MyAssistant
                 else
                     LoadTodosFromDB();
             }
+
+            // Load Groups (ListItems) into DropDownListGroup
+            LoadGroupsIntoComboBox();
         }
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            //if (!IsPostBack)
-            //{
-
-            //}
-            //Lb_Message.Text = "";
-            //if (Session["user"] != null)
-            //    Lbl_UserName.Text = $"Logged In As: {(Session["user"] as User).UserName}";
+            
         }
 
+
+        // Load Groups (ListItems) into DropDownListGroup
+        protected void LoadGroupsIntoComboBox()
+        {
+            // perform SQL Statement to get group names and group ids for this user
+            IEnumerable<Group> groups = GroupController.GetGroupsForUser((Session["user"] as User).ID);
+            // go through the result set and add all the items,
+            foreach (Group group in groups)
+                DropDownListGroup.Items.Add(new ListItem() { Text = group.GroupName, Value = group.ID.ToString() });
+            // make the first one selected by default
+            DropDownListGroup.Items[0].Selected = true;
+        }
+
+
+        // TODO: Refactor to add for group
+        // Pass null for userid and pass groupID
         protected void Btn_AddItem_Click(object sender, EventArgs e)
         {
             // Validate that category was selected
@@ -82,11 +99,74 @@ namespace MyAssistant
             // Grab the priority
             int priority = Int32.Parse(DD_Priority.SelectedValue.ToString());
 
-            TodoItemController.AddTodoItem(description, dueDate, cat, false, priority, ((User)Session["user"]).ID, null);
+            // Grab the group
+            int groupID = Int32.Parse(DropDownListGroup.SelectedValue);
+
+            TodoItemController.AddTodoItem(description, dueDate, cat, false, priority, null, groupID);
             LoadTodosFromDB();
 
             Txb_AddItem.Text = "";
             Txb_DueDate.Text = "";
+        }
+
+
+
+
+        /// <summary>
+        /// When clicking button to take ownership of todoItem, 
+        /// the item will get its UserID value filled out and will 
+        /// move to the view of that user and away from the group view.
+        /// The groupID will stay set on the todoItem which allows for later
+        /// being able to send an item back to the group view.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void TakeThisItem_Click(object sender, EventArgs e)
+        {
+            // get the id of the item
+            Button b = ((Button)sender);
+            int startIndex = b.ID.IndexOf("_") + 1;
+            string idStr = b.ID.Substring(startIndex);
+            int id = int.Parse(idStr);
+
+            // the proc will set the update the todo item and set the userid value
+            TodoItemController.TakeOwnerShipOfTodoItem(id, (Session["user"] as User).ID);
+            LoadTodosFromDB();
+        }
+
+
+
+
+        protected void LoadTodosFromSessionCache()
+        {
+            SetupHeaders();
+            IEnumerable<TodoItem> todos = new List<TodoItem>();
+            todos = (Session["todoDictionary"] as Dictionary<int, TodoItem>).Values.ToList();
+            AddTodoRows(todos);
+        }
+
+
+        // TODO: Refactor
+        // if unchecked: first take ownership, then mark as done
+        // if checked: remove ownership and mark not done
+        protected void TodoCheckBox_Toggle(object sender, EventArgs e)
+        {
+            // at this point sender ID will have the form DeleteButton_ID# and we need to parse out the ID# and then delete it
+            if (!(sender is CheckBox))
+                throw new Exception("Need To Click A CheckBox");
+            
+            CheckBox ib = (CheckBox)sender;
+            int startIndex = ib.ID.IndexOf('_') + 1;
+            string idStr = ib.ID.Substring(startIndex);
+            int id = int.Parse(idStr);
+            int userID = (Session["user"] as User).ID;
+            TodoItem curItem = TodoItemController.GetTodoItemByID(id);
+            if (!curItem.IsComplete)
+                TodoItemController.TakeOwnerShipOfTodoItem(id, userID);                
+            else
+                TodoItemController.RemoveOwnerShipOfTodoItem(id);
+            TodoItemController.ToggleCheckBox(id);
+            LoadTodosFromDB();
         }
 
 
@@ -104,26 +184,12 @@ namespace MyAssistant
             LoadTodosFromDB();
         }
 
-        protected void TodoCheckBox_Toggle(object sender, EventArgs e)
-        {
-            // at this point sender ID will have the form DeleteButton_ID# and we need to parse out the ID# and then delete it
-            if (!(sender is CheckBox))
-                throw new Exception("Need To Click A CheckBox");
-
-            CheckBox ib = (CheckBox)sender;
-            int startIndex = ib.ID.IndexOf('_') + 1;
-            string idStr = ib.ID.Substring(startIndex);
-            int id = int.Parse(idStr);
-            TodoItemController.ToggleCheckBox(id);
-            LoadTodosFromDB();
-        }
-
-
+        
         protected void LoadTodosFromDB()
         {
             SetupHeaders();
             IEnumerable<TodoItem> todos = new List<TodoItem>();
-            todos = TodoItemController.GetPersonalTodoItems((Session["user"] as User).ID);
+            todos = TodoItemController.GetGroupItems((Session["user"] as User).ID);
             Dictionary<int, TodoItem> todoDictionary = new Dictionary<int, TodoItem>();
             foreach (TodoItem item in todos)
                 todoDictionary.Add(item.PKey, item);
@@ -131,17 +197,8 @@ namespace MyAssistant
             AddTodoRows(todos);
         }
 
-        protected void LoadTodosFromSessionCache()
-        {
-            SetupHeaders();
-            IEnumerable<TodoItem> todos = new List<TodoItem>();
-            todos = (Session["todoDictionary"] as Dictionary<int, TodoItem>).Values.ToList();
-            AddTodoRows(todos);
-        }
 
-
-
-
+        // TODO NEED TO REFACTOR
         protected void SetupHeaders()
         {
             if (TodoTable1.Controls != null)
@@ -153,7 +210,8 @@ namespace MyAssistant
             TableCell col4 = new TableCell() { Text = "Category", ID = "CategoryCol", CssClass = "tableHeader" };
             TableCell col5 = new TableCell() { Text = "Created Date", ID = "CreatedDateCol", CssClass = "tableHeader" };
             TableCell col6 = new TableCell() { Text = "Due Date", ID = "DueDateCol", CssClass = "tableHeader" };
-            TableCell col7 = new TableCell() { Text = "Delete", ID = "DeleteCol", CssClass = "tableHeader" };
+            TableCell col7 = new TableCell() { Text = "Take This Item", ID = "TakeThisItemCol", CssClass = "tableHeader" };
+            TableCell col8 = new TableCell() { Text = "Delete", ID = "DeleteCol", CssClass = "tableHeader" };
             headerRow.Cells.Add(col1);
             headerRow.Cells.Add(col2);
             headerRow.Cells.Add(col3);
@@ -161,11 +219,12 @@ namespace MyAssistant
             headerRow.Cells.Add(col5);
             headerRow.Cells.Add(col6);
             headerRow.Cells.Add(col7);
+            headerRow.Cells.Add(col8);
             TodoTable1.Rows.Add(headerRow);
         }
 
 
-
+        // TODO NEED TO REFACTOR
         protected void AddTodoRows(IEnumerable<TodoItem> todos)
         {
             foreach (TodoItem i in todos)
@@ -178,15 +237,19 @@ namespace MyAssistant
                 cb.CheckedChanged += TodoCheckBox_Toggle;
                 TableCell cell1 = new TableCell() { ID = $"isDoneCol{ i.PKey }", };
                 cell1.Controls.Add(cb);
-                TableCell cell2 = new TableCell() { Text = i.Description, ID = $"DescriptionCol{i.PKey}", CssClass = "tableCell" };
-                TableCell cell3 = new TableCell() { Text = i.Priority.ToString(), ID = $"PriorityCol{i.PKey}", CssClass = "tableCell" };
-                TableCell cell4 = new TableCell() { Text = i.Category.ToString(), ID = $"CategoryCol{i.PKey}", CssClass = "tableCell" };
-                TableCell cell5 = new TableCell() { Text = i.CreatedDate.Date.ToShortDateString(), ID = $"CreatedDateCol{i.PKey}", CssClass = "tableCell" };
-                TableCell cell6 = new TableCell() { Text = i.DueDate?.Date.ToShortDateString(), ID = $"DueDateCol{i.PKey}", CssClass = "tableCell" };
-                TableCell cell7 = new TableCell() { ID = $"deleteCol{i.PKey}", CssClass = "tableCell" };
+                TableCell cell2 = new TableCell() { Text = i.Description, ID = $"DescriptionCol_{i.PKey}", CssClass = "tableCell" };
+                TableCell cell3 = new TableCell() { Text = i.Priority.ToString(), ID = $"PriorityCol_{i.PKey}", CssClass = "tableCell" };
+                TableCell cell4 = new TableCell() { Text = i.Category.ToString(), ID = $"CategoryCol_{i.PKey}", CssClass = "tableCell" };
+                TableCell cell5 = new TableCell() { Text = i.CreatedDate.Date.ToShortDateString(), ID = $"CreatedDateCol_{i.PKey}", CssClass = "tableCell" };
+                TableCell cell6 = new TableCell() { Text = i.DueDate?.Date.ToShortDateString(), ID = $"DueDateCol_{i.PKey}", CssClass = "tableCell" };
+                TableCell cell7 = new TableCell() { ID = $"TakeItemCol_{i.PKey}", CssClass = "tableCell" };
+                Button takeItembutton = new Button() { ID = $"TakeItemBut_{i.PKey}", CausesValidation = false, Text = "Click To Take This Item", CssClass = "w3-w3-button w3-WhiteBorderButton w3-w3-hide-small" };
+                takeItembutton.Click += TakeThisItem_Click;
+                cell7.Controls.Add(takeItembutton);
+                TableCell cell8 = new TableCell() { ID = $"deleteCol_{i.PKey}", CssClass = "tableCell" };
                 ImageButton ib = new ImageButton() { Width = 20, Height = 20, AlternateText = "DeleteButton", ImageUrl = "Images/Red-X.png", ID = $"DeleteButton_{i.PKey}", CausesValidation = false, ImageAlign = ImageAlign.Middle };
                 ib.Click += DeleteButton_Click;
-                cell7.Controls.Add(ib);
+                cell8.Controls.Add(ib);
                 TableRow tr = new TableRow();
                 tr.Cells.Add(cell1);
                 tr.Cells.Add(cell2);
@@ -195,6 +258,7 @@ namespace MyAssistant
                 tr.Cells.Add(cell5);
                 tr.Cells.Add(cell6);
                 tr.Cells.Add(cell7);
+                tr.Cells.Add(cell8);
                 if (i.Category == 'P')
                     tr.BackColor = System.Drawing.Color.LightBlue;
                 if (i.Category == 'W')
@@ -204,8 +268,6 @@ namespace MyAssistant
                 TodoTable1.Rows.Add(tr);
             }
         }
-
-
 
 
         protected void Calendar1_DayRender(object sender, DayRenderEventArgs e)
@@ -223,5 +285,6 @@ namespace MyAssistant
         {
             Txb_DueDate.Text = CalendarDueDatePicker.SelectedDate.ToShortDateString();
         }
+
     }
 }

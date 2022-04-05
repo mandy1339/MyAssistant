@@ -125,12 +125,14 @@
     <Content Include="Javascript\DefaultJSHandlers.js" />
     <Content Include="LoginWithMasterPage.aspx" />
     <Content Include="TodoDefault.aspx" />
+    <Content Include="TodoGroupPage.aspx" />
     <Content Include="TodoPersonalPage.aspx" />
     <Content Include="TodoSchoolPage.aspx" />
     <Content Include="TodoWorkPage.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -149,6 +151,7 @@
     <Compile Include="Masterpages\TodoItemsMasterPage.Master.designer.cs">
       <DependentUpon>TodoItemsMasterPage.Master</DependentUpon>
     </Compile>
+    <Compile Include="Models\Group.cs" />
     <Compile Include="Models\TodoItem.cs" />
     <Compile Include="Controllers\TodoItemController.cs" />
     <Compile Include="Models\User.cs" />
@@ -159,6 +162,13 @@
     </Compile>
     <Compile Include="TodoDefault.aspx.designer.cs">
       <DependentUpon>TodoDefault.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TodoGroupPage.aspx.cs">
+      <DependentUpon>TodoGroupPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TodoGroupPage.aspx.designer.cs">
+      <DependentUpon>TodoGroupPage.aspx</DependentUpon>
     </Compile>
     <Compile Include="TodoPersonalPage.aspx.cs">
       <DependentUpon>TodoPersonalPage.aspx</DependentUpon>

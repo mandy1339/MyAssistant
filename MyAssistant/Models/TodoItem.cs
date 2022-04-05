@@ -21,6 +21,9 @@ namespace MyAssistant.Models
         public bool IsComplete { get; set; }
 
         public Byte Priority { get; set; }
+
+        public int? UserID { get; set; }
+        public int? GroupID { get; set; }
         
     }
 }
