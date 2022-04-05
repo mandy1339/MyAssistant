@@ -1,0 +1,9 @@
+DELIMITER $$
+CREATE PROCEDURE spr_RemoveOwnershipOfItem (
+	IN ID INT
+)
+BEGIN
+	UPDATE `TodoItem` SET `UserID` = NULL WHERE `PKey` = ID;
+END
+$$
+DELIMITER ;

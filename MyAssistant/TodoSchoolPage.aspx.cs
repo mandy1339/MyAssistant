@@ -83,7 +83,7 @@ namespace MyAssistant
             // Grab the priority
             int priority = Int32.Parse(DD_Priority.SelectedValue.ToString());
 
-            TodoItems.AddTodoItem(description, dueDate, cat, false, priority, ((User)Session["user"]).ID, null);
+            TodoItemController.AddTodoItem(description, dueDate, cat, false, priority, ((User)Session["user"]).ID, null);
             LoadTodosFromDB();
 
             Txb_AddItem.Text = "";
@@ -101,7 +101,7 @@ namespace MyAssistant
             int startIndex = ib.ID.IndexOf('_') + 1;
             string idStr = ib.ID.Substring(startIndex);
             int id = int.Parse(idStr);
-            TodoItems.DeleteTodoItem(id);
+            TodoItemController.DeleteTodoItem(id);
             LoadTodosFromDB();
         }
 
@@ -115,7 +115,7 @@ namespace MyAssistant
             int startIndex = ib.ID.IndexOf('_') + 1;
             string idStr = ib.ID.Substring(startIndex);
             int id = int.Parse(idStr);
-            TodoItems.ToggleCheckBox(id);
+            TodoItemController.ToggleCheckBox(id);
             LoadTodosFromDB();
         }
 
@@ -124,7 +124,7 @@ namespace MyAssistant
         {
             SetupHeaders();
             IEnumerable<TodoItem> todos = new List<TodoItem>();
-            todos = TodoItems.GetSchoolTodoItems((Session["user"] as User).ID);
+            todos = TodoItemController.GetSchoolTodoItems((Session["user"] as User).ID);
             Dictionary<int, TodoItem> todoDictionary = new Dictionary<int, TodoItem>();
             foreach (TodoItem item in todos)
                 todoDictionary.Add(item.PKey, item);

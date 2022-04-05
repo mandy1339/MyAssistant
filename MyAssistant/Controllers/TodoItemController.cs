@@ -10,8 +10,46 @@ using System.Web.UI;
 
 namespace MyAssistant.Models
 {
-    public static class TodoItems
+    public static class TodoItemController
     {
+        /// <summary>
+        /// GET A SINGLE TODO ITEM WITH GIVEN ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>returns null if not found. else returns the TodoItem</returns>
+        public static TodoItem GetTodoItemByID(int id)
+        {
+            DataTable RS = DBUtilsMySQL.Get1RSFromSqlString(
+                "SELECT " +
+                    "PKey, " +
+                    "Description, " +
+                    "CreatedDate, " +
+                    "DueDate, " +
+                    "Category, " +
+                    "IsComplete, " +
+                    "Priority, " +
+                    "UserID, " +
+                    "GroupID " +
+                "FROM " +
+                    "TodoItem " +
+                $"WHERE PKey = {id}");
+            if (RS.Rows.Count == 0)
+                return null;
+            else
+                return new TodoItem() {
+                    PKey = (int)RS.Rows[0]["PKey"],
+                    Description = RS.Rows[0]["Description"].ToString(),
+                    CreatedDate = (DateTime)RS.Rows[0]["CreatedDate"],
+                    DueDate = (DateTime?)(RS.Rows[0]["DueDate"] == DBNull.Value ? null : RS.Rows[0]["DueDate"]),
+                    Category = RS.Rows[0]["Category"].ToString()[0],
+                    IsComplete = Convert.ToBoolean((ulong)RS.Rows[0]["IsComplete"]),
+                    Priority = (Byte)RS.Rows[0]["Priority"],
+                    UserID = (int?)(RS.Rows[0]["UserID"] == DBNull.Value ? null : RS.Rows[0]["UserID"]),
+                    GroupID = (int?)(RS.Rows[0]["GroupID"] == DBNull.Value ? null : RS.Rows[0]["GroupID"])
+                };
+        }
+
+
 
         /// <summary>
         /// GET ALL ITEMS
@@ -27,7 +65,8 @@ namespace MyAssistant.Models
                     "DueDate, " +
                     "Category, " +
                     "IsComplete, " +
-                    "Priority " +
+                    "Priority, " +
+                    "GroupID " +
                 "FROM " +
                     "TodoItem " +
                 "WHERE " +
@@ -47,10 +86,11 @@ namespace MyAssistant.Models
                     PKey = rowPKey,
                     Description = RS.Rows[i]["Description"].ToString(),
                     CreatedDate = (DateTime)RS.Rows[i]["CreatedDate"],
-                    DueDate = (DateTime?) (RS.Rows[i]["DueDate"] == DBNull.Value ? null : RS.Rows[i]["DueDate"]),
+                    DueDate = (DateTime?)(RS.Rows[i]["DueDate"] == DBNull.Value ? null : RS.Rows[i]["DueDate"]),
                     Category = RS.Rows[i]["Category"].ToString()[0],
                     IsComplete = Convert.ToBoolean((ulong)RS.Rows[i]["IsComplete"]),
                     Priority = (Byte)RS.Rows[i]["Priority"],
+                    GroupID = (int?)(RS.Rows[i]["GroupID"] == DBNull.Value ? null : RS.Rows[i]["GroupID"])
                 };
                 result.Add(newItem);
             }
@@ -204,6 +244,55 @@ namespace MyAssistant.Models
 
 
 
+        /// <summary>
+        /// GET ALL ITEMS
+        /// </summary>
+        /// <returns>IEnumerable Of All Items</returns>
+        public static IEnumerable<TodoItem> GetGroupItems(int userID)
+        {
+            DataTable RS = DBUtilsMySQL.Get1RSFromSqlString(
+                "SELECT " +
+                    "i.PKey, " +
+                    "i.Description, " +
+                    "i.CreatedDate, " +
+                    "i.DueDate, " +
+                    "i.Category, " +
+                    "i.IsComplete, " +
+                    "i.Priority, " +
+                    "i.GroupID " +
+                "FROM " +
+                    "`Group` g JOIN " +
+                    $"`UserGroupXREF` x ON g.ID = x.GroupID AND x.`UserID` = {userID.ToString()} JOIN " +
+                    "`TodoItem` i ON x.GroupID = i.GroupID " +
+                "WHERE " +
+                    "((IsComplete <> 1 OR DateCompleted >= CURRENT_DATE() ) " +
+                    "AND i.`UserID` IS NULL ) " +
+                    "OR (IsComplete = 1 AND DateCompleted >= CURRENT_DATE()) " +
+                "ORDER BY " +
+                    "i.IsComplete ASC, " +
+                    "i.Priority ASC, " +
+                    "i.PKey DESC ");
+
+            List<TodoItem> result = new List<TodoItem>();
+            for (int i = 0; i < RS.Rows.Count; i++)
+            {
+                int rowPKey = (int)RS.Rows[i]["PKey"];
+                TodoItem newItem = new TodoItem()
+                {
+                    PKey = rowPKey,
+                    Description = RS.Rows[i]["Description"].ToString(),
+                    CreatedDate = (DateTime)RS.Rows[i]["CreatedDate"],
+                    DueDate = (DateTime?)(RS.Rows[i]["DueDate"] == DBNull.Value ? null : RS.Rows[i]["DueDate"]),
+                    Category = RS.Rows[i]["Category"].ToString()[0],
+                    IsComplete = Convert.ToBoolean((ulong)RS.Rows[i]["IsComplete"]),
+                    Priority = (Byte)RS.Rows[i]["Priority"],
+                    GroupID = (int)RS.Rows[i]["GroupID"]
+                };
+                result.Add(newItem);
+            }
+            return result as IEnumerable<TodoItem>;
+        }
+
 
 
         /// <summary>
@@ -220,8 +309,7 @@ namespace MyAssistant.Models
         {
             string procSQL = "spr_AddItem";
             int IDOut = 0;
-            MySqlConnection con = DBUtilsMySQL.GetConnection();
-            MySqlCommand cmd = new MySqlCommand(procSQL, con);
+            MySqlCommand cmd = new MySqlCommand(procSQL);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("Description", MySqlDbType.VarChar).Value = description;
             cmd.Parameters["Description"].MySqlDbType = MySqlDbType.VarChar;
@@ -259,8 +347,7 @@ namespace MyAssistant.Models
         public static void DeleteTodoItem(int id)
         {
             string sql = "spr_RemoveItem";
-            MySqlConnection con = DBUtilsMySQL.GetConnection();
-            MySqlCommand cmd = new MySqlCommand(sql, con);
+            MySqlCommand cmd = new MySqlCommand(sql);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("ID", MySqlDbType.Int32).Value = id;
             DBUtilsMySQL.ExecuteStoredProcedure(cmd);
@@ -278,11 +365,45 @@ namespace MyAssistant.Models
         public static void ToggleCheckBox(int id)
         {
             string sql = "spr_ToggleTodoItem";
-            MySqlConnection con = DBUtilsMySQL.GetConnection();
-            MySqlCommand cmd = new MySqlCommand(sql, con);
+            MySqlCommand cmd = new MySqlCommand(sql);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("ID", SqlDbType.Int).Value = id;
             DBUtilsMySQL.ExecuteStoredProcedure(cmd);
         }
+
+
+
+
+        /// <summary>
+        /// Update the todo item and set the userid value = to the passed in userID
+        /// </summary>
+        /// <param name=""></param>
+        public static void TakeOwnerShipOfTodoItem(int id, int userID)
+        {
+            string sql = "spr_TakeOwnershipOfItem";
+            MySqlCommand cmd = new MySqlCommand(sql);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("ID", SqlDbType.Int).Value = id;
+            cmd.Parameters.AddWithValue("UserID", SqlDbType.Int).Value = userID;
+            DBUtilsMySQL.ExecuteStoredProcedure(cmd);
+        }
+
+
+
+        /// <summary>
+        /// Update the todo item and set the userid value to null
+        /// </summary>
+        /// <param name=""></param>
+        public static void RemoveOwnerShipOfTodoItem(int id)
+        {
+            string sql = "spr_RemoveOwnershipOfItem";
+            MySqlCommand cmd = new MySqlCommand(sql);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("ID", SqlDbType.Int).Value = id;
+            DBUtilsMySQL.ExecuteStoredProcedure(cmd);
+        }
+
+
+
     }
 }

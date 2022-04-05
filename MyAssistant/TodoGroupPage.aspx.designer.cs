@@ -11,7 +11,7 @@ namespace MyAssistant
 {
 
 
-    public partial class TodoDefault
+    public partial class TodoGroupPage
     {
 
         /// <summary>
@@ -22,6 +22,15 @@ namespace MyAssistant
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator DescriptionValidator;
+
+        /// <summary>
+        /// DueDateValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RangeValidator DueDateValidator;
 
         /// <summary>
         /// Txb_AddItem control.
@@ -60,13 +69,22 @@ namespace MyAssistant
         protected global::System.Web.UI.WebControls.RadioButton Rd_School;
 
         /// <summary>
-        /// HiddenField_DueDate control.
+        /// Txb_DueDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField HiddenField_DueDate;
+        protected global::System.Web.UI.WebControls.TextBox Txb_DueDate;
+
+        /// <summary>
+        /// CalendarDueDatePicker control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Calendar CalendarDueDatePicker;
 
         /// <summary>
         /// DD_Priority control.
@@ -76,6 +94,24 @@ namespace MyAssistant
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList DD_Priority;
+
+        /// <summary>
+        /// Label1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label1;
+
+        /// <summary>
+        /// DropDownListGroup control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DropDownListGroup;
 
         /// <summary>
         /// Btn_AddItem control.
@@ -103,15 +139,6 @@ namespace MyAssistant
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Table TodoTable1;
-
-        /// <summary>
-        /// isDoneCol control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TableCell isDoneCol;
 
         /// <summary>
         /// descCol control.
@@ -157,6 +184,24 @@ namespace MyAssistant
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TableCell DueDateCol;
+
+        /// <summary>
+        /// TakeItemCol control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TableCell TakeItemCol;
+
+        /// <summary>
+        /// Button1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button1;
 
         /// <summary>
         /// DeleteCol control.
