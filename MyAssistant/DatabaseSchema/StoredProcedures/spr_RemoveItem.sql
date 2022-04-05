@@ -1,0 +1,8 @@
+DELIMITER $$
+CREATE DEFINER=`mandy1339`@`%` PROCEDURE `spr_RemoveItem`(
+	ID INT
+)
+BEGIN
+	DELETE FROM TodoItem WHERE PKey = ID;
+END$$
+DELIMITER ;
