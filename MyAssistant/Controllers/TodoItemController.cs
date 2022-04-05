@@ -238,11 +238,11 @@ namespace MyAssistant.Models
             cmd.Parameters.Add("PKey", MySqlDbType.Int32);     
             cmd.Parameters["PKey"].Direction = ParameterDirection.Output;
             if (userID.HasValue)
-                cmd.Parameters.AddWithValue("UserID", MySqlDbType.Int32).Value = userID.HasValue;
+                cmd.Parameters.AddWithValue("UserID", MySqlDbType.Int32).Value = userID.Value;
             else
                 cmd.Parameters.AddWithValue("UserID", MySqlDbType.Int32).Value = DBNull.Value;
             if (groupID.HasValue)
-                cmd.Parameters.AddWithValue("GroupID", MySqlDbType.Int32).Value = groupID.HasValue;
+                cmd.Parameters.AddWithValue("GroupID", MySqlDbType.Int32).Value = groupID.Value;
             else
                 cmd.Parameters.AddWithValue("GroupID", MySqlDbType.Int32).Value = DBNull.Value;
 
