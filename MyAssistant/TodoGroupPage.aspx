@@ -60,7 +60,7 @@
         </div>
     </div>
     <div class="center" id="TodoSectionDiv">
-        <h3>Todo Items</h3>
+        <h3>Todo Items - Group</h3>
             
         <button id="ButtonShowTodoForm" type="button" class="w3-button w3-black w3-hide-small" onclick="toggleShowTodoForm()">Add New | +</button> 
         <asp:Label ID="Lb_Message" runat="server" class="RedBold"></asp:Label>
