@@ -73,8 +73,8 @@ namespace MyAssistant
 
             // Grab the due date if set
             DateTime? dueDate = null;
-            if (Txb_DueDate.Text.Length > 1)
-                dueDate = DateTime.Parse(Txb_DueDate.Text);
+            if (HiddenField_DueDate.Value.Length > 1)
+                dueDate = DateTime.Parse(HiddenField_DueDate.Value);
 
             // Grab the text
             string description = Txb_AddItem.Text;
@@ -86,7 +86,7 @@ namespace MyAssistant
             LoadTodosFromDB();
 
             Txb_AddItem.Text = "";
-            Txb_DueDate.Text = "";
+            HiddenField_DueDate.Value = "";
         }
 
 
@@ -217,11 +217,6 @@ namespace MyAssistant
                     e.Cell.Controls.Add(new Label { Text = $"{item.Description}", BorderStyle = BorderStyle.Groove });
                 }
             }
-        }
-
-        protected void CalendarDueDatePicker_SelectionChanged(object sender, EventArgs e)
-        {
-            Txb_DueDate.Text = CalendarDueDatePicker.SelectedDate.ToShortDateString();
         }
     }
 }

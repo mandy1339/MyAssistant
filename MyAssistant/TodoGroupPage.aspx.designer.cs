@@ -24,15 +24,6 @@ namespace MyAssistant
         protected global::System.Web.UI.WebControls.RequiredFieldValidator DescriptionValidator;
 
         /// <summary>
-        /// DueDateValidator control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator DueDateValidator;
-
-        /// <summary>
         /// Txb_AddItem control.
         /// </summary>
         /// <remarks>
@@ -69,22 +60,13 @@ namespace MyAssistant
         protected global::System.Web.UI.WebControls.RadioButton Rd_School;
 
         /// <summary>
-        /// Txb_DueDate control.
+        /// HiddenField_DueDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Txb_DueDate;
-
-        /// <summary>
-        /// CalendarDueDatePicker control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Calendar CalendarDueDatePicker;
+        protected global::System.Web.UI.WebControls.HiddenField HiddenField_DueDate;
 
         /// <summary>
         /// DD_Priority control.

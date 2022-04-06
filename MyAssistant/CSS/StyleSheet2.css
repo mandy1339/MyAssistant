@@ -153,3 +153,7 @@ h1 {
     border-width: 1px;
     border-color: white;*/
 }
+
+.RoundedCorners {
+    border-radius: 25px;
+}

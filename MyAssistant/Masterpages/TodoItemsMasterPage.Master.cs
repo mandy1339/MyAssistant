@@ -22,14 +22,22 @@ namespace MyAssistant.Masterpages
         }
 
         protected void Page_Load(object sender, EventArgs e)
-        {
-            
+        {            
             if (!IsPostBack)
             {
-
+                User user = null;
+                if (Session["user"] != null) // If user is set, display the username in the page
+                {
+                    user = (Session["user"] as User);
+                    Lbl_UserName.Text = $"User: {user.UserName}";
+                }
+                if (Session["isLoggedIn"] != null && user != null) // If use is logged and user is set, display the user's profile picture
+                {
+                    ImageProfile.ImageUrl = $"~/Images/{user.UserName.ToUpper()}.png";
+                    ImageProfileTopRight.ImageUrl = $"~/Images/{user.UserName.ToUpper()}.png";
+                }
             }
-            if (Session["user"] != null)
-                Lbl_UserName.Text = $"User: {(Session["user"] as User).UserName}";
+            
         }
     }
 }
