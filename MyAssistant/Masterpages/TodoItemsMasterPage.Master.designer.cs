@@ -42,6 +42,15 @@ namespace MyAssistant.Masterpages
         protected global::System.Web.UI.WebControls.Panel SidebarPanel;
 
         /// <summary>
+        /// ImageProfile control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image ImageProfile;
+
+        /// <summary>
         /// Lbl_UserName control.
         /// </summary>
         /// <remarks>
@@ -49,6 +58,15 @@ namespace MyAssistant.Masterpages
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Lbl_UserName;
+
+        /// <summary>
+        /// ImageProfileTopRight control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image ImageProfileTopRight;
 
         /// <summary>
         /// ContentPlaceHolder1 control.

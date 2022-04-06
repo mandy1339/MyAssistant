@@ -24,7 +24,10 @@
                 <a href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="close menu">
                   <i class="fa fa-remove"></i>
                 </a>
-                <img src="/Images/smoke.jpg" style="width:45%;" class="w3-round"><br><br>
+                <%--<img src="/Images/smoke.jpg" style="width:45%;" class="w3-round" />--%>
+                <asp:Image ID="ImageProfile" ImageUrl="~/Images/NOTLOGGEDINUSER.png" runat="server" CssClass="RoundedCorners" Width="140px" />
+                <br><br>
+
                 <h4><b>MyAssistant</b></h4>
                 <asp:Label ID="Lbl_UserName" class="w3-text-grey" runat="server" Text=""></asp:Label>              
               </div>
@@ -44,7 +47,8 @@
         <!-- !PAGE CONTENT! -->
           <!-- Header -->
         <header id="portfolio">
-            <a href="#"><img src="/w3images/avatar_g2.jpg" style="width:65px;" class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity"></a>
+            <%--<img src="../Images/favicon.ico" style="width:35px;" class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity">--%>
+            <asp:Image ID="ImageProfileTopRight" runat="server" Width="45px" CssClass="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity" />
             <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()"><i class="fa fa-bars"></i></span>
             <div class="w3-container">
                 <h1><b>MyAssistant</b></h1>

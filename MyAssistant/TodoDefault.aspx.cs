@@ -90,6 +90,7 @@ namespace MyAssistant
             LoadTodosFromDB();
 
             Txb_AddItem.Text = "";
+            HiddenField_DueDate.Value = "";
             //Txb_DueDate.Text = "";
         }
 

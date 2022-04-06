@@ -118,7 +118,11 @@
     <Content Include="CSS\StyleSheet2.css" />
     <Content Include="CSS\StyleSheet1.css" />
     <Content Include="Global.asax" />
+    <Content Include="Images\ALEJANDRA.png" />
     <Content Include="Images\favicon.ico" />
+    <Content Include="Images\ILEANABK279.png" />
+    <Content Include="Images\MANDY1339.png" />
+    <Content Include="Images\NOTLOGGEDINUSER.png" />
     <Content Include="Images\Red-X.png" />
     <Content Include="Images\smoke.jpg" />
     <Content Include="Images\trash-can.png" />

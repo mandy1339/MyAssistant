@@ -14,7 +14,7 @@
             <h1>Productivity Assistant</h1>
         </header>
         <asp:RequiredFieldValidator ID="DescriptionValidator" runat="server" ControlToValidate="Txb_AddItem" ErrorMessage="Invalid Description" BackColor="#FA7A7A"></asp:RequiredFieldValidator>
-        <asp:RangeValidator ID="DueDateValidator" runat="server" ControlToValidate="Txb_DueDate" ErrorMessage="Invalid Date" MaximumValue="2090/12/31" MinimumValue="2020/01/01" Type="Date" BackColor="#FF7D5E"></asp:RangeValidator>
+        <%--<asp:RangeValidator ID="DueDateValidator" runat="server" ControlToValidate="Txb_DueDate" ErrorMessage="Invalid Date" MaximumValue="2090/12/31" MinimumValue="2020/01/01" Type="Date" BackColor="#FF7D5E"></asp:RangeValidator>--%>
         <br />
         <div id="AddTodoForm" class="center WhiteOnBlack Hidden"  >
                 
@@ -25,20 +25,10 @@
                 <asp:RadioButton ID="Rd_Work" runat="server" GroupName="Category" Text="Work" ValidationGroup="CategoryValidationGroup" BackColor="Plum" />
                 <asp:RadioButton ID="Rd_Personal" runat="server" GroupName="Category" Text="Personal" ValidationGroup="CategoryValidationGroup" BackColor="LightBlue"/>
                 <asp:RadioButton ID="Rd_School" runat="server" GroupName="Category" Text="School" ValidationGroup="CategoryValidationGroup" BackColor="Moccasin" />
-                ;<br />
+                <br />
             <label class="InputLabel">Due Date</label>
-                <asp:TextBox ID="Txb_DueDate" runat="server" onclick="showDueDatePickerCalendar()" placeholder="Due Date" ToolTip="Enter Due Date If There Is One" BackColor="#E5E5E5" Width="196px"></asp:TextBox>
-                
-            <asp:Calendar ID="CalendarDueDatePicker" hidden="true" ClientIDMode="Static" runat="server" BackColor="White" BorderColor="#999999" CellPadding="4" DayNameFormat="Shortest" Font-Names="Verdana" Font-Size="8pt" ForeColor="Black" Height="180px" OnSelectionChanged="CalendarDueDatePicker_SelectionChanged" Width="200px">
-                <DayHeaderStyle BackColor="#CCCCCC" Font-Bold="True" Font-Size="7pt" />
-                <NextPrevStyle VerticalAlign="Bottom"  />
-                <OtherMonthDayStyle ForeColor="#808080" />
-                <SelectedDayStyle BackColor="#666666" Font-Bold="True" ForeColor="White" />
-                <SelectorStyle BackColor="#CCCCCC" />
-                <TitleStyle BackColor="#999999" BorderColor="Black" Font-Bold="True" />
-                <TodayDayStyle BackColor="#CCCCCC" ForeColor="Black" />
-                <WeekendDayStyle BackColor="#FFFFCC" />
-            </asp:Calendar>                
+            <input id="DueDatePicker" type="date" oninput="datePickerInputJSHandler(this)" style ="background-color:#E5E5E5"/>
+            <asp:HiddenField ClientIDMode="Static" ID="HiddenField_DueDate" runat="server" Value ="" />
                 <br />
             <label class="InputLabel">Priority *</label>
             <asp:DropDownList ID="DD_Priority" runat="server" Width="46px">
