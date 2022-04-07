@@ -23,9 +23,13 @@ namespace MyAssistant.Utils
 
 
 
-        public static DataTable Get1RSFromSqlString(string sqlString)
+        public static DataTable Get1RSFromSqlString(string sqlString, string passedInConnString = null)
         {
-            MySqlConnection conn = GetConnection();
+            MySqlConnection conn;
+            if (passedInConnString != null)
+                conn = new MySqlConnection(passedInConnString);
+            else
+                conn = GetConnection();
             DataTable rs = new DataTable();
             conn.Open();
             //SqlDataAdapter da = new SqlDataAdapter(sqlString, conn);
