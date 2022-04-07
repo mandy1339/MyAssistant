@@ -5,6 +5,8 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyAssistant", "MyAssistant\MyAssistant.csproj", "{6B04E774-B342-4916-8815-7D9418B3B7A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebJobDueDateAlert", "WebJobDueDateAlert\WebJobDueDateAlert.csproj", "{C7C64CD0-206A-428B-A028-6CD98047985E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6B04E774-B342-4916-8815-7D9418B3B7A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B04E774-B342-4916-8815-7D9418B3B7A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B04E774-B342-4916-8815-7D9418B3B7A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7C64CD0-206A-428B-A028-6CD98047985E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7C64CD0-206A-428B-A028-6CD98047985E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7C64CD0-206A-428B-A028-6CD98047985E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7C64CD0-206A-428B-A028-6CD98047985E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
